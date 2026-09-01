@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>La Roccas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    background: #bfe3f5;
+    font-family: 'Trebuchet MS', 'Segoe UI', Verdana, sans-serif;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+
+  .sky {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 42%;
+    background: linear-gradient(to bottom, #1e6fd9 0%, #4a9de8 45%, #a9d8f5 85%, #d7eefd 100%);
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .cloud {
+    position: absolute;
+    opacity: 0.95;
+    animation: drift linear infinite;
+  }
+
+  @keyframes drift {
+    from { transform: translateX(0); }
+    to   { transform: translateX(60px); }
+  }
+
+  .blade {
+    position: absolute;
+    bottom: 0;
+    transform-origin: bottom center;
+    opacity: 0.55;
+  }
+
+  .title {
+    position: relative;
+    z-index: 2;
+    flex: 0 0 auto;
+    text-align: center;
+    margin: 0;
+    padding: 30px 0 10px 0;
+    font-family: 'Baloo 2', 'Comic Sans MS', cursive, sans-serif;
+    font-weight: 800;
+    font-size: 4.4em;
+    letter-spacing: 3px;
+  }
+
+  .cloud-text {
+    position: relative;
+    display: inline-block;
+    color: #ffffff;
+    -webkit-text-stroke: 1px #cfe8fb;
+    text-shadow:
+      0 6px 0 #dceefd,
+      0 12px 18px rgba(50, 100, 160, 0.35),
+      2px -2px 0 #ffffff,
+      -2px 2px 0 #ffffff,
+      2px 2px 0 #ffffff,
+      -2px -2px 0 #ffffff;
+  }
+
+  .cloud-text::before {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #ffffff;
+    filter: blur(14px);
+    opacity: 0.85;
+    z-index: -2;
+  }
+
+  .cloud-text::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #ffffff;
+    filter: blur(5px);
+    opacity: 0.7;
+    z-index: -1;
+  }
+
+  .scene {
+    position: relative;
+    z-index: 1;
+    flex: 1 1 auto;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .hills {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    bottom: 37%;
+    height: 25%;
+    z-index: 1;
+    filter: blur(1px);
+  }
+
+  .grass {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 66%;
+    background: linear-gradient(to bottom,
+      #cdeb6e 0%,
+      #a4d94f 12%,
+      #7fc93e 32%,
+      #5cae2e 58%,
+      #3f8f22 80%,
+      #2e7318 100%);
+    overflow: hidden;
+    z-index: 2;
+    clip-path: url(#grassClip);
+  }
+
+  .grass::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 40% 18% at 15% 20%, rgba(255,255,255,0.18), transparent 70%),
+      radial-gradient(ellipse 50% 20% at 70% 15%, rgba(255,255,255,0.14), transparent 70%),
+      radial-gradient(ellipse 45% 22% at 40% 45%, rgba(0,0,0,0.10), transparent 70%),
+      radial-gradient(ellipse 55% 25% at 85% 55%, rgba(0,0,0,0.10), transparent 70%),
+      radial-gradient(ellipse 60% 20% at 20% 75%, rgba(0,0,0,0.12), transparent 70%),
+      radial-gradient(ellipse 50% 22% at 65% 85%, rgba(255,255,255,0.08), transparent 70%);
+    pointer-events: none;
+  }
+
+  .rock-wrap {
+    position: absolute;
+    bottom: 34%;
+    width: 220px;
+    z-index: 3;
+  }
+
+  .rock-wrap.left {
+    left: 18%;
+    animation: jump 1.6s ease-in-out infinite;
+  }
+
+  .rock-wrap.right {
+    left: 55%;
+    width: 260px;
+    animation: jump 1.6s ease-in-out infinite;
+    animation-delay: 0.35s;
+  }
+
+  .shadow {
+    position: absolute;
+    bottom: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 18px;
+    background: rgba(0,0,0,0.25);
+    border-radius: 50%;
+    filter: blur(2px);
+    animation: shrink 1.6s ease-in-out infinite;
+  }
+
+  .rock-wrap.right .shadow {
+    animation-delay: 0.35s;
+  }
+
+  @keyframes jump {
+    0%   { transform: translateY(0); }
+    20%  { transform: translateY(-4px); }
+    40%  { transform: translateY(-55px); }
+    55%  { transform: translateY(-55px); }
+    75%  { transform: translateY(-4px); }
+    100% { transform: translateY(0); }
+  }
+
+  @keyframes shrink {
+    0%   { transform: translateX(-50%) scale(1); opacity: 0.28; }
+    40%  { transform: translateX(-50%) scale(0.55); opacity: 0.12; }
+    55%  { transform: translateX(-50%) scale(0.55); opacity: 0.12; }
+    100% { transform: translateX(-50%) scale(1); opacity: 0.28; }
+  }
+
+  svg { display: block; width: 100%; height: auto; }
+</style>
+</head>
+<body>
+
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <clipPath id="grassClip" clipPathUnits="objectBoundingBox">
+        <path d="M 0,0.20
+                 C 0.18,0.02 0.32,0.02 0.48,0.12
+                 C 0.62,0.20 0.78,0.02 1,0.10
+                 L 1,1 L 0,1 Z" />
+      </clipPath>
+    </defs>
+  </svg>
+
+  <div class="sky" id="sky"></div>
+
+  <div class="title"><span class="cloud-text" data-text="La Roccas">La Roccas</span></div>
+
+  <div class="scene">
+
+    <div class="hills" id="hills"></div>
+    <div class="grass" id="grass"></div>
+
+    <div class="rock-wrap left">
+      <div class="shadow"></div>
+      <svg viewBox="0 0 800 550" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 60 380
+                 C 30 300, 60 230, 150 190
+                 C 190 120, 300 60, 400 90
+                 C 500 60, 620 90, 660 180
+                 C 740 220, 760 320, 700 380
+                 C 720 430, 680 480, 600 490
+                 C 500 520, 300 520, 200 490
+                 C 100 480, 50 440, 60 380 Z"
+              fill="#8a8a8f" stroke="#000" stroke-width="14" stroke-linejoin="round"/>
+        <path d="M 400 90 L 380 260 L 250 300" fill="none" stroke="#000" stroke-width="10" stroke-linecap="round"/>
+        <path d="M 560 260 L 480 380" fill="none" stroke="#000" stroke-width="10" stroke-linecap="round"/>
+        <path d="M 150 190 C 180 260, 200 320, 170 400" fill="none" stroke="#bfbfc4" stroke-width="10" stroke-linecap="round" opacity="0.8"/>
+        <path d="M 620 130 C 660 190, 660 260, 620 330" fill="none" stroke="#6d6d72" stroke-width="16" stroke-linecap="round" opacity="0.7"/>
+        <ellipse cx="180" cy="420" rx="55" ry="30" fill="#6d6d72" opacity="0.6"/>
+        <ellipse cx="500" cy="440" rx="70" ry="26" fill="#a8a8ad" opacity="0.5"/>
+      </svg>
+    </div>
+
+    <div class="rock-wrap right">
+      <div class="shadow"></div>
+      <svg viewBox="0 0 800 550" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 60 380
+                 C 30 300, 60 230, 150 190
+                 C 190 120, 300 60, 400 90
+                 C 500 60, 620 90, 660 180
+                 C 740 220, 760 320, 700 380
+                 C 720 430, 680 480, 600 490
+                 C 500 520, 300 520, 200 490
+                 C 100 480, 50 440, 60 380 Z"
+              fill="#95959a" stroke="#000" stroke-width="14" stroke-linejoin="round"/>
+        <path d="M 400 90 L 430 250 L 560 270" fill="none" stroke="#000" stroke-width="10" stroke-linecap="round"/>
+        <path d="M 280 260 L 340 400" fill="none" stroke="#000" stroke-width="10" stroke-linecap="round"/>
+        <path d="M 650 170 C 690 230, 690 300, 650 370" fill="none" stroke="#bfbfc4" stroke-width="10" stroke-linecap="round" opacity="0.8"/>
+        <path d="M 160 210 C 130 270, 130 330, 170 390" fill="none" stroke="#6d6d72" stroke-width="16" stroke-linecap="round" opacity="0.7"/>
+        <ellipse cx="580" cy="420" rx="55" ry="30" fill="#6d6d72" opacity="0.6"/>
+        <ellipse cx="260" cy="440" rx="70" ry="26" fill="#b0b0b5" opacity="0.5"/>
+      </svg>
+    </div>
+
+  </div>
+
+  <script>
+    // ---- Windows-XP-style clip-art clouds ----
+    function makeCloud(x, y, scale) {
+      const ns = "http://www.w3.org/2000/svg";
+      const svg = document.createElementNS(ns, "svg");
+      svg.setAttribute("viewBox", "0 0 200 100");
+      svg.setAttribute("width", 200 * scale);
+      svg.setAttribute("height", 100 * scale);
+
+      const group = document.createElementNS(ns, "g");
+      const puffs = [
+        [50, 65, 35], [85, 45, 42], [120, 55, 38],
+        [155, 68, 28], [95, 75, 45], [30, 78, 22]
+      ];
+      puffs.forEach(([cx, cy, r]) => {
+        const c = document.createElementNS(ns, "circle");
+        c.setAttribute("cx", cx);
+        c.setAttribute("cy", cy);
+        c.setAttribute("r", r);
+        c.setAttribute("fill", "#ffffff");
+        group.appendChild(c);
+      });
+      const base = document.createElementNS(ns, "rect");
+      base.setAttribute("x", 20);
+      base.setAttribute("y", 60);
+      base.setAttribute("width", 150);
+      base.setAttribute("height", 30);
+      base.setAttribute("fill", "#ffffff");
+      group.appendChild(base);
+
+      // soft shading underside for a clip-art puffy look
+      const shade = document.createElementNS(ns, "ellipse");
+      shade.setAttribute("cx", 95);
+      shade.setAttribute("cy", 78);
+      shade.setAttribute("rx", 70);
+      shade.setAttribute("ry", 14);
+      shade.setAttribute("fill", "#dbeeff");
+      shade.setAttribute("opacity", "0.8");
+      group.appendChild(shade);
+
+      svg.appendChild(group);
+
+      const wrap = document.createElement("div");
+      wrap.className = "cloud";
+      wrap.style.left = x + "%";
+      wrap.style.top = y + "%";
+      wrap.style.animationDuration = (40 + Math.random() * 20) + "s";
+      wrap.appendChild(svg);
+      return wrap;
+    }
+
+    const sky = document.getElementById("sky");
+    const cloudSpecs = [
+      [5, 15, 0.9], [30, 8, 0.6], [60, 20, 1.1],
+      [80, 5, 0.5], [15, 45, 0.7], [70, 50, 0.85]
+    ];
+    cloudSpecs.forEach(([x, y, s]) => sky.appendChild(makeCloud(x, y, s)));
+
+    // ---- generic grass blades ----
+    function makeBlade(leftPct, heightPx, rotateDeg, hue) {
+      const ns = "http://www.w3.org/2000/svg";
+      const svg = document.createElementNS(ns, "svg");
+      svg.setAttribute("viewBox", "0 0 20 100");
+      svg.setAttribute("width", heightPx * 0.22);
+      svg.setAttribute("height", heightPx);
+
+      const path = document.createElementNS(ns, "path");
+      path.setAttribute("d", "M10 100 C 4 70, 8 40, 2 0 C 12 35, 16 30, 18 5 C 14 45, 16 75, 10 100 Z");
+      path.setAttribute("fill", hue);
+      svg.appendChild(path);
+
+      const wrap = document.createElement("div");
+      wrap.className = "blade";
+      wrap.style.left = leftPct + "%";
+      wrap.style.transform = "rotate(" + rotateDeg + "deg)";
+      wrap.appendChild(svg);
+      return wrap;
+    }
+
+    const grass = document.getElementById("grass");
+    const bladeColors = ["#5a9c33", "#6ab53a", "#4c8a2a", "#a8d95a"];
+    const bladeCount = 40;
+    for (let i = 0; i < bladeCount; i++) {
+      const left = Math.random() * 100;
+      const height = 22 + Math.random() * 40;
+      const rotate = (Math.random() * 20) - 10;
+      const color = bladeColors[Math.floor(Math.random() * bladeColors.length)];
+      grass.appendChild(makeBlade(left, height, rotate, color));
+    }
+
+    // ---- soft rolling hills / distant mountains behind the grass ----
+    function makeHillLayer(colorFar, colorNear) {
+      const ns = "http://www.w3.org/2000/svg";
+      const svg = document.createElementNS(ns, "svg");
+      svg.setAttribute("viewBox", "0 0 1000 200");
+      svg.setAttribute("preserveAspectRatio", "none");
+      svg.style.width = "100%";
+      svg.style.height = "100%";
+      svg.style.display = "block";
+
+      const far = document.createElementNS(ns, "path");
+      far.setAttribute("d", "M0 90 C 120 40, 260 110, 380 60 C 520 10, 640 90, 780 50 C 880 25, 950 70, 1000 55 L 1000 200 L 0 200 Z");
+      far.setAttribute("fill", colorFar);
+      far.setAttribute("opacity", "0.55");
+      svg.appendChild(far);
+
+      const near = document.createElementNS(ns, "path");
+      near.setAttribute("d", "M0 140 C 140 90, 300 160, 460 110 C 600 70, 760 150, 900 100 C 950 85, 980 100, 1000 95 L 1000 200 L 0 200 Z");
+      near.setAttribute("fill", colorNear);
+      near.setAttribute("opacity", "0.75");
+      svg.appendChild(near);
+
+      return svg;
+    }
+
+    const hills = document.getElementById("hills");
+    hills.appendChild(makeHillLayer("#3fa6a0", "#2f9b4a"));
+  </script>
+
+</body>
+</html>
